@@ -22,37 +22,47 @@ package cmd
 
 import (
 	"fmt"
+	"os/exec"
 
 	"github.com/spf13/cobra"
+	"github.com/yieldbot/sensuplugin/sensuutil"
 )
 
-// checkChronyCmd represents the checkChrony command
+var warnThreshold int
+var critThreshold int
+var checkKey string
+
 var checkChronyCmd = &cobra.Command{
 	Use:   "checkChrony",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Check various values in chrony to ensure all is well",
+	Long: `This will use 'chronyc tracking' to build a map of keys allowing the
+  user to check against any of the values to ensure they are within tolerated
+  limits for their environment.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("checkChrony called")
+
+		chronyCheck := exec.Command("chronyc", "tracking")
+
+		out, err := chronyCheck.Output()
+		if err != nil {
+			sensuutil.EHndlr(err)
+		}
+
+		chronyCheck.Start()
+		data := createMap(string(out))
+
+		if debug {
+			for k, v := range data {
+				fmt.Println("Key: ", k, "Current value: ", v)
+			}
+		}
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(checkChronyCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// checkChronyCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// checkChronyCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	checkChronyCmd.Flags().IntVarP(&warnThreshold, "warn", "", 4, "the alert warning threshold")
+	checkChronyCmd.Flags().IntVarP(&critThreshold, "crit", "", 8, "the alert critical threshold")
+	checkChronyCmd.Flags().StringVarP(&checkKey, "checkKey", "", "", "the key to check")
 
 }
