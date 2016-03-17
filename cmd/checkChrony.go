@@ -20,49 +20,10 @@
 
 package cmd
 
-import (
-	"fmt"
-	"os/exec"
-
-	"github.com/spf13/cobra"
-	"github.com/yieldbot/sensuplugin/sensuutil"
-)
-
-var warnThreshold int
-var critThreshold int
-var checkKey string
-
-var checkChronyCmd = &cobra.Command{
-	Use:   "checkChrony",
-	Short: "Check various values in chrony to ensure all is well",
-	Long: `This will use 'chronyc tracking' to build a map of keys allowing the
-  user to check against any of the values to ensure they are within tolerated
-  limits for their environment.`,
-	Run: func(cmd *cobra.Command, args []string) {
-
-		chronyCheck := exec.Command("chronyc", "tracking")
-
-		out, err := chronyCheck.Output()
-		if err != nil {
-			sensuutil.EHndlr(err)
-		}
-
-		chronyCheck.Start()
-		data := createMap(string(out))
-
-		if debug {
-			for k, v := range data {
-				fmt.Println("Key: ", k, "Current value: ", v)
-			}
-		}
-	},
-}
-
-func init() {
-	RootCmd.AddCommand(checkChronyCmd)
-
-	checkChronyCmd.Flags().IntVarP(&warnThreshold, "warn", "", 4, "the alert warning threshold")
-	checkChronyCmd.Flags().IntVarP(&critThreshold, "crit", "", 8, "the alert critical threshold")
-	checkChronyCmd.Flags().StringVarP(&checkKey, "checkKey", "", "", "the key to check")
-
+func checkLocalChrony(RefID string) (string, string) {
+	if RefID == "127.127.1.1" {
+		msg := "Chrony is synced locally"
+		return "critical", msg
+	}
+	return "ok", ""
 }
