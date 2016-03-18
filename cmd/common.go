@@ -32,13 +32,16 @@ func createMap(out string) map[string]string {
 	var c string
 
 	j := strings.Split(out, "\n")
-
 	for _, k := range j {
 		l := strings.SplitN(k, ":", 2)
 		for i, n := range l {
 			c = string(n)
 			if i == 0 {
-				key = c
+				if !debug {
+					key = strings.TrimSpace(c)
+				} else {
+					key = c
+				}
 			} else {
 				m[key] = cleanVal(c)
 			}

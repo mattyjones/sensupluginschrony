@@ -35,8 +35,6 @@ var checkKey string
 var condition string
 var msg string
 
-// var alarm = false
-
 var checkChronyStatsCmd = &cobra.Command{
 	Use:   "checkChronyStats",
 	Short: "Check various values in chrony to ensure all is well",
@@ -84,6 +82,4 @@ func init() {
 	checkChronyStatsCmd.Flags().IntVarP(&warnThreshold, "warn", "", 4, "the alert warning threshold")
 	checkChronyStatsCmd.Flags().IntVarP(&critThreshold, "crit", "", 8, "the alert critical threshold")
 	checkChronyStatsCmd.Flags().StringVarP(&checkKey, "checkKey", "", "", "the key to check")
-	// checkChronyStatsCmd.Flags().StringVarP(&checkLocal, "checkLocal", "", false, "check to make sure we are syncd externally")
-
 }
