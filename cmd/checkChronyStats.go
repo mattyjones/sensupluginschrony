@@ -57,6 +57,7 @@ var checkChronyStatsCmd = &cobra.Command{
 			for k, v := range data {
 				fmt.Println("Key: ", k, "Current value: ", v)
 			}
+			sensuutil.Exit("Debug")
 		}
 
 		switch checkKey {
