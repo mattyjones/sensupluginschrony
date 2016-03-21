@@ -142,3 +142,42 @@ func TestCreateMap(t *testing.T) {
 		})
 	})
 }
+
+// 1458528701 1458528828
+
+func TestTimeDeviation(t *testing.T) {
+	Convey("When testing the difference of two times", t, func() {
+		var curTime int64
+		var checkTime int64
+		var threshold int64
+		var out bool
+
+		Convey("When '1458528828' minus '1458521701' is over the threshold of 300 seconds", func() {
+			curTime = 1458528828
+			checkTime = 1458521701
+			threshold = 300
+
+			out = timeDeviation(checkTime, curTime, threshold)
+			Convey("The output should be true", func() {
+				So(out, ShouldBeTrue)
+			})
+			Convey("The output should not be false", func() {
+				So(out, ShouldNotEqual, false)
+			})
+		})
+
+		Convey("When '1458528828' minus '1458528820' is under the threshold of 300 seconds", func() {
+			curTime = 1458528828
+			checkTime = 1458528820
+			threshold = 300
+
+			out = timeDeviation(checkTime, curTime, threshold)
+			Convey("The output should be false", func() {
+				So(out, ShouldBeFalse)
+			})
+			Convey("The output should not be true", func() {
+				So(out, ShouldNotEqual, true)
+			})
+		})
+	})
+}

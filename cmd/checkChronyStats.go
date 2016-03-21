@@ -28,8 +28,8 @@ import (
 	"github.com/yieldbot/sensuplugin/sensuutil"
 )
 
-var warnThreshold int
-var critThreshold int
+var warnThreshold int64
+var critThreshold int64
 var checkKey string
 
 var condition string
@@ -63,24 +63,35 @@ var checkChronyStatsCmd = &cobra.Command{
 		switch checkKey {
 		case "ReferenceID":
 			condition, msg = checkLocalChrony(data["Reference ID"])
+		case "Stratum":
+			condition, msg = checkStratum(data["Stratum"], warnThreshold, critThreshold)
+		case "ReferenceTime":
+			condition, msg = checkRefTime(convDate(data["Ref time (UTC)"]), warnThreshold, critThreshold)
 		}
 
 		switch condition {
 		case "ok":
 			sensuutil.Exit("ok")
 		case "warning":
-			sensuutil.Exit("warning")
+			sensuutil.Exit("warning", msg)
 		case "critical":
-			sensuutil.Exit("critical")
+			sensuutil.Exit("critical", msg)
 		}
-
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(checkChronyStatsCmd)
 
-	checkChronyStatsCmd.Flags().IntVarP(&warnThreshold, "warn", "", 4, "the alert warning threshold")
-	checkChronyStatsCmd.Flags().IntVarP(&critThreshold, "crit", "", 8, "the alert critical threshold")
+	checkChronyStatsCmd.Flags().Int64VarP(&warnThreshold, "warn", "", 4, "the alert warning threshold")
+	checkChronyStatsCmd.Flags().Int64VarP(&critThreshold, "crit", "", 8, "the alert critical threshold")
 	checkChronyStatsCmd.Flags().StringVarP(&checkKey, "checkKey", "", "", "the key to check")
 }
+
+/*
+
+ReferenceID is a straight shot, it is either critical or not
+Stratum is the number of hops away, critical and warning are that number
+ReferenceTime is the time the last measurement from a source was processed, critical and warning values represent the number of seconds diviation
+
+*/

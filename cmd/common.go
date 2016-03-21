@@ -75,13 +75,20 @@ func cleanVal(c string) string {
 	return strings.TrimSpace(out)
 }
 
+func timeDeviation(val int64, curVal int64, threshold int64) bool {
+	if (curVal - val) > threshold {
+		return true
+	}
+	return false
+}
+
 func convDate(d string) int64 {
 	e, _ := time.Parse("Mon Jan _2 15:04:05 2006", d)
 	return e.Unix()
 }
 
-func overThreshold(curVal int64, threshold int64) bool {
-	if curVal > threshold {
+func overThreshold(num1 int64, num2 int64) bool {
+	if num1 >= num2 {
 		return true
 	}
 	return false

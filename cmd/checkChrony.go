@@ -20,10 +20,43 @@
 
 package cmd
 
+import (
+	"strconv"
+	"time"
+)
+
 func checkLocalChrony(RefID string) (string, string) {
 	if RefID == "127.127.1.1" {
 		msg := "Chrony is synced locally"
 		return "critical", msg
+	}
+	return "ok", ""
+}
+
+func checkStratum(curVal string, warnThreshold int64, critThreshold int64) (string, string) {
+	if val, err := strconv.ParseInt(curVal, 10, 32); err == nil {
+		switch {
+		case overThreshold(val, critThreshold):
+			msg := "You are more than the max number of hops"
+			return "critical", msg
+		case overThreshold(val, warnThreshold):
+			msg := "You are nearing the max number of hops"
+			return "warning", msg
+		}
+	}
+	return "ok", ""
+}
+
+func checkRefTime(curVal int64, warnThreshold int64, critThreshold int64) (string, string) {
+	val := curVal
+	t := time.Now().UTC().Unix()
+	switch {
+	case timeDeviation(val, t, critThreshold):
+		msg := "You are over the max allowed deviation"
+		return "critical", msg
+	case timeDeviation(val, t, warnThreshold):
+		msg := "You are nearing the max allowed deviation"
+		return "warning", msg
 	}
 	return "ok", ""
 }

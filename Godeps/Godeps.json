@@ -9,39 +9,39 @@
 		},
 		{
 			"ImportPath": "github.com/hashicorp/hcl",
-			"Rev": "fdad7857309386ba76730b9021197e21c5dfc545"
+			"Rev": "32f2911ca2c1700edfe45a51c41c6858a8ea31f3"
 		},
 		{
 			"ImportPath": "github.com/hashicorp/hcl/hcl/ast",
-			"Rev": "fdad7857309386ba76730b9021197e21c5dfc545"
+			"Rev": "32f2911ca2c1700edfe45a51c41c6858a8ea31f3"
 		},
 		{
 			"ImportPath": "github.com/hashicorp/hcl/hcl/parser",
-			"Rev": "fdad7857309386ba76730b9021197e21c5dfc545"
+			"Rev": "32f2911ca2c1700edfe45a51c41c6858a8ea31f3"
 		},
 		{
 			"ImportPath": "github.com/hashicorp/hcl/hcl/scanner",
-			"Rev": "fdad7857309386ba76730b9021197e21c5dfc545"
+			"Rev": "32f2911ca2c1700edfe45a51c41c6858a8ea31f3"
 		},
 		{
 			"ImportPath": "github.com/hashicorp/hcl/hcl/strconv",
-			"Rev": "fdad7857309386ba76730b9021197e21c5dfc545"
+			"Rev": "32f2911ca2c1700edfe45a51c41c6858a8ea31f3"
 		},
 		{
 			"ImportPath": "github.com/hashicorp/hcl/hcl/token",
-			"Rev": "fdad7857309386ba76730b9021197e21c5dfc545"
+			"Rev": "32f2911ca2c1700edfe45a51c41c6858a8ea31f3"
 		},
 		{
 			"ImportPath": "github.com/hashicorp/hcl/json/parser",
-			"Rev": "fdad7857309386ba76730b9021197e21c5dfc545"
+			"Rev": "32f2911ca2c1700edfe45a51c41c6858a8ea31f3"
 		},
 		{
 			"ImportPath": "github.com/hashicorp/hcl/json/scanner",
-			"Rev": "fdad7857309386ba76730b9021197e21c5dfc545"
+			"Rev": "32f2911ca2c1700edfe45a51c41c6858a8ea31f3"
 		},
 		{
 			"ImportPath": "github.com/hashicorp/hcl/json/token",
-			"Rev": "fdad7857309386ba76730b9021197e21c5dfc545"
+			"Rev": "32f2911ca2c1700edfe45a51c41c6858a8ea31f3"
 		},
 		{
 			"ImportPath": "github.com/inconshreveable/mousetrap",
@@ -58,8 +58,8 @@
 		},
 		{
 			"ImportPath": "github.com/magiconair/properties",
-			"Comment": "v1.6.0-5-g497d0af",
-			"Rev": "497d0afefddf378f9ffb3c89db6a326985908519"
+			"Comment": "v1.7.0",
+			"Rev": "c265cfa48dda6474e208715ca93e987829f572f8"
 		},
 		{
 			"ImportPath": "github.com/mitchellh/mapstructure",
