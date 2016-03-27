@@ -6,8 +6,16 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 ## [Unreleased]
 
 ## [0.0.1] - 2016-03-16
-
 ### Added
 - initial external stable release
 
-[Unreleased]: https://github.com/yieldbot/sensupluginschrony/compare/0.0.1....HEAD
+## [0.1.0] - 2016-03-26
+### Added
+- ability to check for the Last Offset and RMS Offset
+- additional tests and documentation
+
+### Changed
+- split `overThreshold` into `overIntThreshold` and `overFloatThreshold`
+
+[Unreleased]: https://github.com/yieldbot/sensupluginschrony/compare/0.1.0....HEAD
+[0.0.2]: https://github.com/yieldbot/sensupluginschrony/compare/0.0.1....0.1.0

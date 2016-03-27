@@ -40,7 +40,15 @@ var checkChronyStatsCmd = &cobra.Command{
 	Short: "Check various values in chrony to ensure all is well",
 	Long: `This will use 'chronyc tracking' to build a map of keys allowing the
   user to check against any of the values to ensure they are within tolerated
-  limits for their environment.`,
+  limits for their environment.
+
+  Currently the following values can be checked:
+  - Refernce ID
+  - Stratum
+  - Reference Time
+  - Last Offset
+  - RMS Offset`,
+
 	Run: func(cmd *cobra.Command, args []string) {
 
 		chronyStats := exec.Command("chronyc", "tracking")
@@ -67,11 +75,15 @@ var checkChronyStatsCmd = &cobra.Command{
 			condition, msg = checkStratum(data["Stratum"], warnThreshold, critThreshold)
 		case "ReferenceTime":
 			condition, msg = checkRefTime(convDate(data["Ref time (UTC)"]), warnThreshold, critThreshold)
+		case "LastOffset":
+			condition, msg = checkOffset(data["Last offset"], warnThreshold, critThreshold)
+		case "RMSOffset":
+			condition, msg = checkOffset(data["RMS offset"], warnThreshold, critThreshold)
 		}
 
 		switch condition {
 		case "ok":
-			sensuutil.Exit("ok")
+			sensuutil.Exit("ok", "fine")
 		case "warning":
 			sensuutil.Exit("warning", msg)
 		case "critical":

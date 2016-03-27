@@ -36,10 +36,10 @@ func checkLocalChrony(RefID string) (string, string) {
 func checkStratum(curVal string, warnThreshold int64, critThreshold int64) (string, string) {
 	if val, err := strconv.ParseInt(curVal, 10, 32); err == nil {
 		switch {
-		case overThreshold(val, critThreshold):
+		case overIntThreshold(val, critThreshold):
 			msg := "You are more than the max number of hops"
 			return "critical", msg
-		case overThreshold(val, warnThreshold):
+		case overIntThreshold(val, warnThreshold):
 			msg := "You are nearing the max number of hops"
 			return "warning", msg
 		}
@@ -56,6 +56,20 @@ func checkRefTime(curVal int64, warnThreshold int64, critThreshold int64) (strin
 		return "critical", msg
 	case timeDeviation(val, t, warnThreshold):
 		msg := "You are nearing the max allowed deviation"
+		return "warning", msg
+	}
+	return "ok", ""
+}
+
+func checkOffset(offset string, warnThreshold int64, critThreshold int64) (string, string) {
+	curVal, _ := strconv.ParseFloat(offset, 64)
+
+	switch {
+	case overFloatThreshold(curVal, float64(critThreshold)):
+		msg := "You are over the critical threshold"
+		return "critical", msg
+	case overFloatThreshold(curVal, float64(warnThreshold)):
+		msg := "You are over the warning threshold"
 		return "warning", msg
 	}
 	return "ok", ""

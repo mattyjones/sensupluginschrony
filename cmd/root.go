@@ -31,18 +31,20 @@ import (
 var cfgFile string
 var debug bool
 
+// RootCmd is the toplevel entry point
 var RootCmd = &cobra.Command{
 	Use:   "sensupluginschrony",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "Sensu Plugins checks for Chrony",
+	Long: `This plugin uses 'chronyc tracking' to build a map of values and then
+  compares the given value against a warning and critical threshold supplied by
+  the user either via command line or via configuration file
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//  Run: func(cmd *cobra.Command, args []string) { },
+  Currently the following values can be checked:
+  - Refernce ID
+  - Stratum
+  - Reference Time
+  - Last Offset
+  - RMS Offset`,
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
@@ -57,20 +59,14 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports Persistent Flags, which, if defined here,
-	// will be global for your application.
-
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.sensupluginschrony.yaml)")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	RootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "print debugging info")
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" { // enable ability to specify config file via flag
+	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 	}
 

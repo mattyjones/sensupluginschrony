@@ -87,7 +87,14 @@ func convDate(d string) int64 {
 	return e.Unix()
 }
 
-func overThreshold(num1 int64, num2 int64) bool {
+func overIntThreshold(num1 int64, num2 int64) bool {
+	if num1 >= num2 {
+		return true
+	}
+	return false
+}
+
+func overFloatThreshold(num1 float64, num2 float64) bool {
 	if num1 >= num2 {
 		return true
 	}

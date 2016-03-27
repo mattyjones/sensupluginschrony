@@ -185,3 +185,75 @@ func TestCheckRefTime(t *testing.T) {
 		})
 	})
 }
+
+func TestCheckOffset(t *testing.T) {
+	var warnThreshold int64
+	var critThreshold int64
+	var alarm string
+	var msg string
+	var offset string
+
+	Convey("When checking the Offset", t, func() {
+		Convey("If the offset is 3.14, the warning threshold is 4, and the critical threshold is 6", func() {
+			offset = "3.14"
+			warnThreshold = 4
+			critThreshold = 6
+			alarm, msg = checkOffset(offset, warnThreshold, critThreshold)
+
+			Convey("The alarm should be ok and the message should be empty", func() {
+				So(alarm, ShouldEqual, "ok")
+				So(msg, ShouldBeEmpty)
+			})
+			Convey("The alarm not should be warning and the message should not be 'You are over the warning threshold'", func() {
+				So(alarm, ShouldNotEqual, "warning")
+				So(msg, ShouldNotEqual, "You are over the warning threshold")
+			})
+			Convey("The alarm should not be 'critical' and the message should not be 'You are over the critical threshold'", func() {
+				So(alarm, ShouldNotEqual, "critical")
+				So(msg, ShouldNotEqual, "You are over the critical threshold")
+			})
+		})
+
+		Convey("If the offset is 4.14, the warning threshold is 4, and the critical threshold is 6", func() {
+
+			offset = "4.14"
+			warnThreshold = 4
+			critThreshold = 6
+			alarm, msg = checkOffset(offset, warnThreshold, critThreshold)
+
+			Convey("The alarm should be not be ok and the message should not be empty", func() {
+				So(alarm, ShouldNotEqual, "ok")
+				So(msg, ShouldNotBeEmpty)
+			})
+			Convey("The alarm should be warning and the message should be 'You are over the warning threshold'", func() {
+				So(alarm, ShouldEqual, "warning")
+				So(msg, ShouldEqual, "You are over the warning threshold")
+			})
+			Convey("The alarm should not be 'critical' and the message should not be 'You are over the critical threshold'", func() {
+				So(alarm, ShouldNotEqual, "critical")
+				So(msg, ShouldNotEqual, "You are over the critical threshold")
+			})
+		})
+
+		Convey("If the offset is 6.14, the warning threshold is 4, and the critical threshold is 6", func() {
+
+			offset = "6.14"
+			warnThreshold = 4
+			critThreshold = 6
+			alarm, msg = checkOffset(offset, warnThreshold, critThreshold)
+
+			Convey("The alarm should be not be ok and the message should not be empty", func() {
+				So(alarm, ShouldNotEqual, "ok")
+				So(msg, ShouldNotBeEmpty)
+			})
+			Convey("The alarm should not be warning and the message should not be 'You are over the warning threshold'", func() {
+				So(alarm, ShouldNotEqual, "warning")
+				So(msg, ShouldNotEqual, "You are over the warning threshold")
+			})
+			Convey("The alarm should be 'critical' and the message should be 'You are over the critical threshold'", func() {
+				So(alarm, ShouldEqual, "critical")
+				So(msg, ShouldEqual, "You are over the critical threshold")
+			})
+		})
+	})
+}
