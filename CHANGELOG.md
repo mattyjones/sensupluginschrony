@@ -18,4 +18,4 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 - split `overThreshold` into `overIntThreshold` and `overFloatThreshold`
 
 [Unreleased]: https://github.com/yieldbot/sensupluginschrony/compare/0.1.0....HEAD
-[0.0.2]: https://github.com/yieldbot/sensupluginschrony/compare/0.0.1....0.1.0
+[0.1.0]: https://github.com/yieldbot/sensupluginschrony/compare/0.0.1....0.1.0
