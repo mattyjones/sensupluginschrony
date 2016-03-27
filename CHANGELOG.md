@@ -5,6 +5,9 @@ This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachang
 
 ## [Unreleased]
 
+### Changed
+- removed output from an `ok` check to conform to std unix practice of exiting cleaning upon 0 status
+
 ## [0.0.1] - 2016-03-16
 ### Added
 - initial external stable release

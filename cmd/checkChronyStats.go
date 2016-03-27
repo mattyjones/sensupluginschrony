@@ -83,7 +83,7 @@ var checkChronyStatsCmd = &cobra.Command{
 
 		switch condition {
 		case "ok":
-			sensuutil.Exit("ok", "fine")
+			sensuutil.Exit("ok")
 		case "warning":
 			sensuutil.Exit("warning", msg)
 		case "critical":
