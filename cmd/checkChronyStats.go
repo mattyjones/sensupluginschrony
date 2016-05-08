@@ -21,10 +21,9 @@
 package cmd
 
 import (
-	"fmt"
 	"os/exec"
-
 	"github.com/spf13/cobra"
+  "github.com/op/go-logging"
 	"github.com/yieldbot/sensuplugin/sensuutil"
 )
 
@@ -34,6 +33,9 @@ var checkKey string
 
 var condition string
 var msg string
+
+
+var log = logging.MustGetLogger("chrony")
 
 var checkChronyStatsCmd = &cobra.Command{
 	Use:   "checkChronyStats",
@@ -51,11 +53,15 @@ var checkChronyStatsCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 
+    backend2, _ := logging.NewSyslogBackend("checkChronyStats")
+    backend2Formatter := logging.NewBackendFormatter(backend2, sensuutil.Format)
+    logging.SetBackend(backend2Formatter)
+
 		chronyStats := exec.Command("chronyc", "tracking")
 
 		out, err := chronyStats.Output()
 		if err != nil {
-			sensuutil.EHndlr(err)
+			panic(err)
 		}
 
 		chronyStats.Start()
@@ -63,7 +69,7 @@ var checkChronyStatsCmd = &cobra.Command{
 
 		if debug {
 			for k, v := range data {
-				fmt.Println("Key: ", k, "Current value: ", v)
+				log.Debug("Key: ", k, "Current value: ", sensuutil.Password(v))
 			}
 			sensuutil.Exit("Debug")
 		}
