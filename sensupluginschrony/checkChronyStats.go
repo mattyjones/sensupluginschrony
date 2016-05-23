@@ -18,12 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package cmd
+package sensupluginschrony
 
 import (
+	"os"
 	"os/exec"
+
+	"github.com/op/go-logging"
 	"github.com/spf13/cobra"
-  "github.com/op/go-logging"
 	"github.com/yieldbot/sensuplugin/sensuutil"
 )
 
@@ -34,8 +36,8 @@ var checkKey string
 var condition string
 var msg string
 
-
-var log = logging.MustGetLogger("chrony")
+var syslogLog = logging.MustGetLogger("chrony")
+var stderrLog = logging.MustGetLogger("chrony")
 
 var checkChronyStatsCmd = &cobra.Command{
 	Use:   "checkChronyStats",
@@ -51,17 +53,21 @@ var checkChronyStatsCmd = &cobra.Command{
   - Last Offset
   - RMS Offset`,
 
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(sensupluginschrony *cobra.Command, args []string) {
 
-    backend2, _ := logging.NewSyslogBackend("checkChronyStats")
-    backend2Formatter := logging.NewBackendFormatter(backend2, sensuutil.Format)
-    logging.SetBackend(backend2Formatter)
+		syslogBackend, _ := logging.NewSyslogBackend("checkChronyStats")
+		stderrBackend := logging.NewLogBackend(os.Stderr, "checkChronyStats", 0)
+		syslogBackendFormatter := logging.NewBackendFormatter(syslogBackend, sensuutil.SyslogFormat)
+		stderrBackendFormatter := logging.NewBackendFormatter(stderrBackend, sensuutil.StderrFormat)
+		logging.SetBackend(syslogBackendFormatter)
+		logging.SetBackend(stderrBackendFormatter)
 
 		chronyStats := exec.Command("chronyc", "tracking")
 
 		out, err := chronyStats.Output()
 		if err != nil {
-			panic(err)
+			syslogLog.Error("err")
+			os.Exit(129)
 		}
 
 		chronyStats.Start()
@@ -69,7 +75,7 @@ var checkChronyStatsCmd = &cobra.Command{
 
 		if debug {
 			for k, v := range data {
-				log.Debug("Key: ", k, "Current value: ", sensuutil.Password(v))
+				stderrLog.Debug("Key: ", k, "Current value: ", v)
 			}
 			sensuutil.Exit("Debug")
 		}

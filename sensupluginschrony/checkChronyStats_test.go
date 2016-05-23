@@ -1,4 +1,4 @@
-package cmd
+package sensupluginschrony
 
 import (
 	"os/exec"
