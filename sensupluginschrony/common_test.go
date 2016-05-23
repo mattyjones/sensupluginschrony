@@ -80,7 +80,7 @@ func TestOverFloatThreshold(t *testing.T) {
 }
 
 func TestCleanVal(t *testing.T) {
-	var debug bool
+	// var debug bool
 	var c string
 	var out string
 

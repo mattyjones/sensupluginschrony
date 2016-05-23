@@ -9,7 +9,7 @@ import (
 
 func TestCheckLocalChrony(t *testing.T) {
 	var condition string
-	var msg string
+	// var msg string
 
 	Convey("When checking the Reference ID", t, func() {
 		var RefID string

@@ -25,12 +25,16 @@ import (
 	"time"
 )
 
+var ok = "ok"
+var warning = "warning"
+var critical = "critical"
+
 func checkLocalChrony(RefID string) (string, string) {
 	if RefID == "127.127.1.1" {
 		msg := "Chrony is synced locally"
-		return "critical", msg
+		return critical, msg
 	}
-	return "ok", ""
+	return ok, ""
 }
 
 func checkStratum(curVal string, warnThreshold int64, critThreshold int64) (string, string) {
@@ -38,13 +42,13 @@ func checkStratum(curVal string, warnThreshold int64, critThreshold int64) (stri
 		switch {
 		case overIntThreshold(val, critThreshold):
 			msg := "You are more than the max number of hops"
-			return "critical", msg
+			return critical, msg
 		case overIntThreshold(val, warnThreshold):
 			msg := "You are nearing the max number of hops"
-			return "warning", msg
+			return warning, msg
 		}
 	}
-	return "ok", ""
+	return ok, ""
 }
 
 func checkRefTime(curVal int64, warnThreshold int64, critThreshold int64) (string, string) {
@@ -53,12 +57,12 @@ func checkRefTime(curVal int64, warnThreshold int64, critThreshold int64) (strin
 	switch {
 	case timeDeviation(val, t, critThreshold):
 		msg := "You are over the max allowed deviation"
-		return "critical", msg
+		return critical, msg
 	case timeDeviation(val, t, warnThreshold):
 		msg := "You are nearing the max allowed deviation"
-		return "warning", msg
+		return warning, msg
 	}
-	return "ok", ""
+	return ok, ""
 }
 
 func checkOffset(offset string, warnThreshold int64, critThreshold int64) (string, string) {
@@ -67,10 +71,10 @@ func checkOffset(offset string, warnThreshold int64, critThreshold int64) (strin
 	switch {
 	case overFloatThreshold(curVal, float64(critThreshold)):
 		msg := "You are over the critical threshold"
-		return "critical", msg
+		return critical, msg
 	case overFloatThreshold(curVal, float64(warnThreshold)):
 		msg := "You are over the warning threshold"
-		return "warning", msg
+		return warning, msg
 	}
-	return "ok", ""
+	return ok, ""
 }
