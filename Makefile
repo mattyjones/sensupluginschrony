@@ -220,6 +220,7 @@ pre-build:
 	else \
 		echo "Creating proper build environment and dependency directory structure"; \
 		echo "Creating $$GOPATH/src/github.com/yieldbot/$(pkg)"; \
+		rm -rf $$GOPATH/src/github.com/yieldbot/$(pkg); \
 		mkdir -p $$GOPATH/src/github.com/yieldbot/$(pkg); \
 		echo "Copying dependencies from $$(pwd) -> $$GOPATH/src/github.com/yieldbot/$(pkg)"; \
 		cp -R ./* $$GOPATH/src/github.com/yieldbot/$(pkg); \
