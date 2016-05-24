@@ -21,30 +21,23 @@
 package sensupluginschrony
 
 import (
-	"os"
 	"os/exec"
 
-	"github.com/op/go-logging"
+	"github.com/Sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/yieldbot/sensuplugin/sensuutil"
 )
 
 var warnThreshold int64
 var critThreshold int64
-var checkKey string
 
 var condition string
 var msg string
 
-var syslogLog = logging.MustGetLogger("chrony")
-var stderrLog = logging.MustGetLogger("chrony")
-
 var checkChronyStatsCmd = &cobra.Command{
 	Use:   "checkChronyStats",
 	Short: "Check various values in chrony to ensure all is well",
-	Long: `This will use 'chronyc tracking' to build a map of keys allowing the
-  user to check against any of the values to ensure they are within tolerated
-  limits for their environment.
+	Long: `This will use 'chronyc tracking' to build a map of keys allowing the user to check against any of the values to ensure they are within tolerated limits for their environment.
 
   Currently the following values can be checked:
   - Refernce ID
@@ -55,19 +48,18 @@ var checkChronyStatsCmd = &cobra.Command{
 
 	Run: func(sensupluginschrony *cobra.Command, args []string) {
 
-		syslogBackend, _ := logging.NewSyslogBackend("checkChronyStats")
-		stderrBackend := logging.NewLogBackend(os.Stderr, "checkChronyStats", 0)
-		syslogBackendFormatter := logging.NewBackendFormatter(syslogBackend, sensuutil.SyslogFormat)
-		stderrBackendFormatter := logging.NewBackendFormatter(stderrBackend, sensuutil.StderrFormat)
-		logging.SetBackend(syslogBackendFormatter)
-		logging.SetBackend(stderrBackendFormatter)
-
 		chronyStats := exec.Command("chronyc", "tracking")
 
 		out, err := chronyStats.Output()
 		if err != nil {
-			syslogLog.Error("err")
-			os.Exit(129)
+			syslogLog.WithFields(logrus.Fields{
+				"check":   "sensupluginscrony",
+				"client":  host,
+				"version": "foo",
+				"error":   err,
+				"output":  out,
+			}).Error(`ChronyStats output is not valid`)
+			sensuutil.Exit("RUNTIMEERROR")
 		}
 
 		chronyStats.Start()
@@ -75,9 +67,15 @@ var checkChronyStatsCmd = &cobra.Command{
 
 		if debug {
 			for k, v := range data {
-				stderrLog.Debug("Key: ", k, "Current value: ", v)
+				syslogLog.WithFields(logrus.Fields{
+					"check":         "sensupluginscrony",
+					"client":        host,
+					"version":       "foo",
+					"key":           k,
+					"Current value": v,
+				}).Info()
 			}
-			sensuutil.Exit("Debug")
+			sensuutil.Exit("DEBUG")
 		}
 
 		switch checkKey {
@@ -107,9 +105,8 @@ var checkChronyStatsCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(checkChronyStatsCmd)
 
-	checkChronyStatsCmd.Flags().Int64VarP(&warnThreshold, "warn", "", 4, "the alert warning threshold")
-	checkChronyStatsCmd.Flags().Int64VarP(&critThreshold, "crit", "", 8, "the alert critical threshold")
-	checkChronyStatsCmd.Flags().StringVarP(&checkKey, "checkKey", "", "", "the key to check")
+	checkChronyStatsCmd.Flags().Int64VarP(&warnThreshold, "warn", "", 0, "the alert warning threshold")
+	checkChronyStatsCmd.Flags().Int64VarP(&critThreshold, "crit", "", 0, "the alert critical threshold")
 }
 
 /*
