@@ -26,6 +26,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/yieldbot/sensuplugin/sensuutil"
+	"github.com/yieldbot/sensupluginschrony/version"
 )
 
 var warnThreshold int64
@@ -34,6 +35,7 @@ var critThreshold int64
 var condition string
 var msg string
 
+// checkChronyStatsCmd is the main entry point
 var checkChronyStatsCmd = &cobra.Command{
 	Use:   "checkChronyStats",
 	Short: "Check various values in chrony to ensure all is well",
@@ -48,6 +50,7 @@ var checkChronyStatsCmd = &cobra.Command{
 
 	Run: func(sensupluginschrony *cobra.Command, args []string) {
 
+		// get the actual stats for chrony
 		chronyStats := exec.Command("chronyc", "tracking")
 
 		out, err := chronyStats.Output()
@@ -55,7 +58,7 @@ var checkChronyStatsCmd = &cobra.Command{
 			syslogLog.WithFields(logrus.Fields{
 				"check":   "sensupluginscrony",
 				"client":  host,
-				"version": "foo",
+				"version": version.AppVersion(),
 				"error":   err,
 				"output":  out,
 			}).Error(`ChronyStats output is not valid`)
@@ -70,7 +73,7 @@ var checkChronyStatsCmd = &cobra.Command{
 				syslogLog.WithFields(logrus.Fields{
 					"check":         "sensupluginscrony",
 					"client":        host,
-					"version":       "foo",
+					"version":       version.AppVersion(),
 					"key":           k,
 					"Current value": v,
 				}).Info()
@@ -78,6 +81,7 @@ var checkChronyStatsCmd = &cobra.Command{
 			sensuutil.Exit("DEBUG")
 		}
 
+		// decide which key to test against
 		switch checkKey {
 		case "ReferenceID":
 			condition, msg = checkLocalChrony(data["Reference ID"])
@@ -91,6 +95,7 @@ var checkChronyStatsCmd = &cobra.Command{
 			condition, msg = checkOffset(data["RMS offset"], warnThreshold, critThreshold)
 		}
 
+		// exit with the right code
 		switch condition {
 		case "ok":
 			sensuutil.Exit(condition)

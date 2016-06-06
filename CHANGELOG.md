@@ -4,12 +4,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This CHANGELOG follows the format listed at [Keep A Changelog](http://keepachangelog.com/)
 
 ## [Unreleased]
+
+## [0.1.2] - 2016-06-06
+### Added
+- logging
+- docs
+
+## [0.1.1] - 2016-06-04
+### Changed
+- removed output from an `ok` check to conform to std unix practice of exiting cleaning upon 0 status
 - update pkg names
 - bump to golang 1.6.2
 - update vendoring
-
-### Changed
-- removed output from an `ok` check to conform to std unix practice of exiting cleaning upon 0 status
 
 ## [0.0.1] - 2016-03-16
 ### Added

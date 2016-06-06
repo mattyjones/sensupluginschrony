@@ -29,6 +29,7 @@ var ok = "ok"
 var warning = "warning"
 var critical = "critical"
 
+// checkLocalChrony will verify if chrony is running locally or not
 func checkLocalChrony(RefID string) (string, string) {
 	if RefID == "127.127.1.1" {
 		msg := "Chrony is synced locally"
@@ -37,6 +38,7 @@ func checkLocalChrony(RefID string) (string, string) {
 	return ok, ""
 }
 
+// checkStratum will test the number of hops
 func checkStratum(curVal string, warnThreshold int64, critThreshold int64) (string, string) {
 	if val, err := strconv.ParseInt(curVal, 10, 32); err == nil {
 		switch {
@@ -51,6 +53,7 @@ func checkStratum(curVal string, warnThreshold int64, critThreshold int64) (stri
 	return ok, ""
 }
 
+// checkRefTime will check the deviation of the ref time vs what is allowed
 func checkRefTime(curVal int64, warnThreshold int64, critThreshold int64) (string, string) {
 	val := curVal
 	t := time.Now().UTC().Unix()
@@ -65,6 +68,7 @@ func checkRefTime(curVal int64, warnThreshold int64, critThreshold int64) (strin
 	return ok, ""
 }
 
+// checkOffset will test the chrony offset
 func checkOffset(offset string, warnThreshold int64, critThreshold int64) (string, string) {
 	curVal, _ := strconv.ParseFloat(offset, 64)
 

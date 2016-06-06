@@ -30,34 +30,28 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yieldbot/sensuplugin/sensuutil"
+	"github.com/yieldbot/sensupluginschrony/version"
 )
 
-var cfgFile string // used for configuration via Viper
+// Configuration via Viper
+var cfgFile string
 
-var host string // get the hostname for logging
+// Hostname for logging
+var host string
 
-// Create a set of logging instances. I have two because they are configured
-// differently via levels and format. Stderr should be configured for ascii
-// as that is more human readable but the syslog logger should be in json format
-// to make it more easily consumable via automated processes or third-party
-// tools.
-// var stderrLog = logrus.Logger{
-// 	Out: os.Stderr,
-// }
-// var stdoutLog = logrus.Logger{
-// 	Out:   os.Stdout,
-// 	Level: logrus.DebugLevel,
-// }
+// Create a logging instance.
 var syslogLog = logrus.New()
 
+// Chrony stat to check against
 var checkKey string
 
+// Enable debugging
 var debug bool
 
 // RootCmd is the toplevel entry point
 var RootCmd = &cobra.Command{
 	Use:   "sensupluginschrony",
-	Short: "kk",
+	Short: fmt.Sprintf("A set of chrony checks for Sensu - (%s)", version.AppVersion()),
 	Long: `This plugin uses 'chronyc tracking' to build a map of values and then compares the given value against a warning and critical threshold supplied by the user either via command line or via configuration file
 
   Currently the following values can be checked:
@@ -82,13 +76,12 @@ func init() {
 
 	// Setup logging for the package. Doing it here is much eaiser than in each
 	// binary. If you want to overwrite it in a specific binary then feel free.
-	// stderrLog.Out = os.Stderr
 	hook, err := logrus_syslog.NewSyslogHook("", "", syslog.LOG_INFO, "")
 	if err != nil {
 		panic(err)
 	}
 	syslogLog.Hooks.Add(hook)
-	// syslogLog.Formatter = new(logrus.JSONFormatter)
+	syslogLog.Formatter = new(logrus.JSONFormatter)
 
 	// Set the hostname for use in logging within the package. Doing it here is
 	// cleaner than in each binary but if you want to use some other method just
@@ -98,7 +91,7 @@ func init() {
 		syslogLog.WithFields(logrus.Fields{
 			"check":   "sensupluginschrony",
 			"client":  "unknown",
-			"version": "foo",
+			"version": version.AppVersion(),
 			"error":   err,
 		}).Error(`Could not determine the hostname of this machine as reported by the kernel.`)
 		sensuutil.Exit("GENERALGOLANGERROR")
@@ -126,7 +119,7 @@ func initConfig() {
 			syslogLog.WithFields(logrus.Fields{
 				"check":   "sensupluginscrony",
 				"client":  host,
-				"version": "foo",
+				"version": version.AppVersion(),
 				"error":   err,
 				"cfgFile": cfgFile,
 			}).Error(`Could not read in the configuration file.`)
