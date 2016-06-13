@@ -24,15 +24,22 @@ import (
 	"fmt"
 )
 
+//AppVersionMajor is the major revision number
 const AppVersionMajor = "0"
+
+// AppVersionMinor is the minor revison number
 const AppVersionMinor = "1"
-const AppVersionPatch = "4"
+
+// AppVersionPatch is the patch version
+const AppVersionPatch = "11"
+
+// AppVersionPre ...
 const AppVersionPre = ""
 
-// Set this to an empty string when releasing
+// AppVersionBuild should be empty string when releasing
 const AppVersionBuild = ""
 
-// This function gene
+// AppVersion generates a usable version string
 func AppVersion() string {
 	return fmt.Sprintf("%s.%s.%s%s%s", AppVersionMajor, AppVersionMinor, AppVersionPatch, AppVersionPre, AppVersionBuild)
 }
