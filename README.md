@@ -22,4 +22,4 @@ Available keys are
 1. chmod +x sensupluginschrony (*nix only)
 1. cp sensupluginschrony /usr/local/bin
 
-## Notes
+## Notes  
