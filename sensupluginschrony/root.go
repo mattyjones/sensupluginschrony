@@ -30,7 +30,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yieldbot/sensuplugin/sensuutil"
-	"github.com/yieldbot/sensupluginschrony/version"
+	//"github.com/yieldbot/sensupluginschrony/version"
 )
 
 // Configuration via Viper
@@ -51,7 +51,7 @@ var debug bool
 // RootCmd is the toplevel entry point
 var RootCmd = &cobra.Command{
 	Use:   "sensupluginschrony",
-	Short: fmt.Sprintf("A set of chrony checks for Sensu - (%s)", version.AppVersion()),
+	//Short: fmt.Sprintf("A set of chrony checks for Sensu - (%s)", version.AppVersion()),
 	Long: `This plugin uses 'chronyc tracking' to build a map of values and then compares the given value against a warning and critical threshold supplied by the user either via command line or via configuration file
 
   Currently the following values can be checked:
@@ -91,7 +91,7 @@ func init() {
 		syslogLog.WithFields(logrus.Fields{
 			"check":   "sensupluginschrony",
 			"client":  "unknown",
-			"version": version.AppVersion(),
+			//"version": version.AppVersion(),
 			"error":   err,
 		}).Error(`Could not determine the hostname of this machine as reported by the kernel.`)
 		sensuutil.Exit("GENERALGOLANGERROR")
@@ -119,7 +119,7 @@ func initConfig() {
 			syslogLog.WithFields(logrus.Fields{
 				"check":   "sensupluginscrony",
 				"client":  host,
-				"version": version.AppVersion(),
+				//"version": version.AppVersion(),
 				"error":   err,
 				"cfgFile": cfgFile,
 			}).Error(`Could not read in the configuration file.`)

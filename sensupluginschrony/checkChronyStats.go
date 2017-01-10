@@ -26,7 +26,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/yieldbot/sensuplugin/sensuutil"
-	"github.com/yieldbot/sensupluginschrony/version"
+	//"github.com/yieldbot/sensupluginschrony/version"
 )
 
 var warnThreshold int64
@@ -58,7 +58,7 @@ var checkChronyStatsCmd = &cobra.Command{
 			syslogLog.WithFields(logrus.Fields{
 				"check":   "sensupluginscrony",
 				"client":  host,
-				"version": version.AppVersion(),
+				//"version": version.AppVersion(),
 				"error":   err,
 				"output":  out,
 			}).Error(`ChronyStats output is not valid`)
@@ -73,7 +73,7 @@ var checkChronyStatsCmd = &cobra.Command{
 				syslogLog.WithFields(logrus.Fields{
 					"check":         "sensupluginscrony",
 					"client":        host,
-					"version":       version.AppVersion(),
+					//"version":       version.AppVersion(),
 					"key":           k,
 					"Current value": v,
 				}).Info()
